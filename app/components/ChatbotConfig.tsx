@@ -142,7 +142,7 @@ const router=useRouter();
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <label className="block text-lg font-medium text-gray-700">Bot Name<div className='text-sm'>( works try changing the name)</div></label>
+                  <label className="block text-lg font-medium text-gray-700">Bot Name<div className='text-sm'></div></label>
                   <Tooltip content="This name will be used by the AI to introduce itself to users. Choose a friendly, professional name that aligns with your brand. For example, if your bot is named 'Alex', it might say 'Hi, I'm Alex, your real estate assistant.'" />
                 </div>
                 <input
@@ -155,7 +155,7 @@ const router=useRouter();
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <label className="block text-lg font-medium text-gray-700">Lead Type<div className='text-sm'>(dont work)</div></label>
+                  <label className="block text-lg font-medium text-gray-700">Lead Type<div className='text-sm'></div></label>
                   <Tooltip content="This setting fundamentally changes how the AI interacts with leads. For buyers, it focuses on property features, neighborhoods, and viewing appointments. For sellers, it emphasizes property valuation, market analysis, and listing strategies." />
                 </div>
                 <div className="relative">
@@ -198,7 +198,7 @@ const router=useRouter();
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <label className="block text-lg font-medium text-gray-700">Starting Message <div className='text-sm'>(dont work)</div></label>
+                  <label className="block text-lg font-medium text-gray-700">Starting Message <div className='text-sm'></div></label>
                   <Tooltip content="This is the AI's opening message. It should be welcoming and set clear expectations. The AI will use this to start conversations, incorporating the bot name and adapting the tone based on the lead type selected." />
                 </div>
                 <textarea
@@ -218,7 +218,7 @@ const router=useRouter();
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <label className="block text-lg font-medium text-gray-700">Enrichment Questions<div className='text-sm'>(works try adding question)</div></label>
+                  <label className="block text-lg font-medium text-gray-700">Enrichment Questions<div className='text-sm'></div></label>
                   <div className="flex items-center space-x-4">
                     <Tooltip content="These questions help the AI gather crucial information about leads. For buyers, consider questions about preferred locations, budget, or property type. For sellers, focus on property details, timeline, and motivation for selling. The AI will naturally weave these questions into the conversation." />
                     <button
@@ -286,7 +286,7 @@ const router=useRouter();
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <label className="block text-lg font-medium text-gray-700">Common Business<div className='text-sm'>(dont work)</div></label>
+                  <label className="block text-lg font-medium text-gray-700">Common Business<div className='text-sm'></div></label>
                   <div className="flex items-center space-x-4">
                     <Tooltip content="These questions train the AI on your business specifics. Add frequently asked questions about your services, processes, or policies. The AI will use these to provide accurate, consistent responses aligned with your business practices." />
                   </div>
