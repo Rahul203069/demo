@@ -1,0 +1,229 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+
+model User {
+  id           String   @id @default(uuid()) @unique
+  email        String   @unique
+  name         String
+  password     String
+  role         Role     @default(ADMIN)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  image        String?
+  otp           String?
+  areacode      String?
+  phonenumber   String?
+   googlecalendarmetadata  Json?
+ buyerbot       BuyerBot?
+ sellerbot      SellerBot?  
+  
+  phoneverifed   Boolean @default(false)
+  // One-to-one relation with Twilio
+  twilio       Twilio?
+  
+  // Other relations
+  leads        Lead[]
+  conversations Conversation[]
+  appointments Appointment[]
+}
+
+model Twilio {
+  id          String   @id @default(uuid())
+  userId      String   @unique // Ensures one Twilio per User
+  phone       String
+  areacode    Int?
+  sid         String
+  metadata    Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Reference to User - establishes the one-to-one relation
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Lead {
+  id           String     @id @default(uuid())  
+  name         String
+  email        String[] 
+  phone        String[]
+  status       LeadStatus @default(JUNK)
+  source       LeadSource
+data    Json
+  assignedTo   User?      @relation(fields: [userId], references: [id])
+  userId       String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  contacts     Contact[]  // Store multiple emails & phone numbers
+  conversations Conversation[]
+  appointments Appointment[]
+}
+
+enum LeadStatus {
+  HOT
+  WARM
+  JUNK
+}
+
+enum LeadSource {
+  HUBSPOT
+  GOOGLE_SHEETS
+  REDX
+  MANUAL
+}
+
+model Contact {
+  id       String     @id @default(uuid())  
+  leadId   String
+  type     ContactType // EMAIL or PHONE
+  value    String
+  createdAt DateTime @default(now())
+
+  lead     Lead @relation(fields: [leadId], references: [id])
+}
+
+enum ContactType {
+  EMAIL
+  PHONE
+}
+
+model Conversation {
+  id          String   @id @default(uuid())  
+  leadId      String   
+  userId      String?
+  messages    Message[]
+  aiSummary   String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  lead        Lead      @relation(fields: [leadId], references: [id])
+  user        User?     @relation(fields: [userId], references: [id])
+}
+
+model Message {
+  id           String     @id @default(uuid())  
+  conversationId String  
+  sender        SenderType
+  content       String
+  timestamp     DateTime   @default(now())
+
+  conversation  Conversation @relation(fields: [conversationId], references: [id])
+
+
+}
+
+enum SenderType {
+  AI
+  USER
+  LEAD
+}
+
+
+
+
+
+
+
+model Appointment {
+  id           String   @id @default(uuid())  
+  leadId       String  
+  userId       String
+  scheduledAt  DateTime  
+  status       AppointmentStatus @default(PENDING)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  lead         Lead @relation(fields: [leadId], references: [id])
+  user         User @relation(fields: [userId], references: [id])
+}
+
+
+model Testchat {
+
+id String  @id @default(uuid())
+buyerbotid  String? @unique
+sellerbotid String? @unique
+userid    String   
+type    String
+message   Json?     
+
+
+
+}
+
+
+model EnrichmentQuestion {
+  id       String @id @default(uuid())
+  question String
+  
+  // Relations
+  buyerBots  BuyerBot[] @relation("BuyerBotEnrichment")
+  sellerBots SellerBot[] @relation("SellerBotEnrichment")
+}
+
+model BuyerBot {
+  id                String   @id @default(uuid())
+  userid            String  @unique
+  name              String
+  bussinessinfo     String
+  enrichment        EnrichmentQuestion[] @relation("BuyerBotEnrichment")
+  appointmentsetter Boolean 
+  islive            Boolean @default(false)
+  startingmessage   String
+  prompt            String?
+
+  // Reference to User
+  user              User     @relation(fields: [userid], references: [id])
+}
+
+model SellerBot {
+  id                String   @id @default(uuid())
+  userid            String   @unique
+  name              String
+  bussinessinfo     String
+  enrichment        EnrichmentQuestion[] @relation("SellerBotEnrichment")  // Fixed relation name
+  islive            Boolean @default(false)
+  appointmentsetter Boolean 
+  startingmessage   String
+  prompt            String?
+
+  // Reference to User
+  user              User     @relation(fields: [userid], references: [id])
+}
+
+
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELED
+}
+
+enum leadtype {
+  BUYER
+  SELLER
+
+}
+
+
