@@ -78,25 +78,29 @@ const router=useRouter();
 
   const addEnrichmentQuestion = () => {
     const newQuestion = { id: Date.now().toString(), question: '' };
-    setEnrichmentQuestions([...enrichmentQuestions, newQuestion]);
-    
-    // Also update the form values
-    const currentIndex = enrichmentQuestions.length;
-    setValue(`enrichmentQuestions.${currentIndex}`, newQuestion);
+  
+    setEnrichmentQuestions((prevQuestions) => {
+      const updatedQuestions = [...prevQuestions, newQuestion];
+      
+      // Use the question ID as the key instead of index
+      setValue(`enrichmentQuestions.${newQuestion.id}`, newQuestion);
+  
+      return updatedQuestions;
+    });
   };
+  
+
 
   const removeEnrichmentQuestion = (id: string) => {
-    const updatedQuestions = enrichmentQuestions.filter(q => q.id !== id);
-    setEnrichmentQuestions(updatedQuestions);
-    
-    // Update form values to match the state
-    updatedQuestions.forEach((question, index) => {
-      setValue(`enrichmentQuestions.${index}`, question);
+    setEnrichmentQuestions((prevQuestions) => {
+      const updatedQuestions = prevQuestions.filter((q) => q.id !== id);
+  
+      // Remove the specific question from the form
+      setValue(`enrichmentQuestions.${id}`, undefined);
+  
+      return updatedQuestions;
     });
-    // Clear any extra values
-    setValue('enrichmentQuestions', updatedQuestions);
   };
-
   const onSubmit = async (data: Chatbotconfig) => {
     setloader(true);
     
@@ -232,35 +236,37 @@ const router=useRouter();
                   </div>
                 </div>
                 {enrichmentQuestions.map((question, index) => (
-                  <motion.div
-                    key={question.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="flex space-x-2"
-                  >
-                    <input
-                      type="text"
-                      defaultValue={question.question}
-                      {...register(`enrichmentQuestions.${index}.question`)}
-                      onChange={(e) => {
-                        const newQuestions = [...enrichmentQuestions];
-                        newQuestions[index].question = e.target.value;
-                        setEnrichmentQuestions(newQuestions);
-                      }}
-                      className="flex-1 px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-base"
-                      placeholder="Enter your question"
-                    />
-                    {enrichmentQuestions.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removeEnrichmentQuestion(question.id)}
-                        className="text-gray-400 hover:text-red-500 transition-colors"
-                      >
-                        <Minus className="h-5 w-5" />
-                      </button>
-                    )}
-                  </motion.div>
-                ))}
+  <motion.div
+    key={question.id}
+    initial={{ opacity: 0, x: -20 }}
+    animate={{ opacity: 1, x: 0 }}
+    className="flex space-x-2"
+  >
+    <input
+      type="text"
+      value={question.question}
+      onChange={(e) => {
+        setEnrichmentQuestions((prevQuestions) => {
+          return prevQuestions.map((q, i) =>
+            i === index ? { ...q, question: e.target.value } : q
+          );
+        });
+      }}
+      className="flex-1 px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-base"
+      placeholder="Enter your question"
+    />
+
+    {enrichmentQuestions.length > 1 && (
+      <button
+        type="button"
+        onClick={() => removeEnrichmentQuestion(question.id)}
+        className="text-gray-400 hover:text-red-500 transition-colors"
+      >
+        <Minus className="h-5 w-5" />
+      </button>
+    )}
+  </motion.div>
+))}
               </div>
 
               <div className="flex items-center justify-between py-4 px-6 bg-gray-50 rounded-lg">
