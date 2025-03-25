@@ -54,7 +54,7 @@ export default function ChatbotConfig({ setrelode, config,setclose }) {
 const router=useRouter();
   const { register, handleSubmit, watch, setValue, getValues } = useForm<Chatbotconfig>({
     defaultValues: {
-      leadType: 'buyer',
+      leadType: 'seller',
       ...(config ? {
         id:config.id,
         botName: config.name,
@@ -155,7 +155,7 @@ const router=useRouter();
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <label className="block text-lg font-medium text-gray-700">Lead Type<div className='text-sm'></div></label>
+                  <label className="block text-lg font-medium text-gray-700">Lead Type<div className='text-sm'>(dont work)</div></label>
                   <Tooltip content="This setting fundamentally changes how the AI interacts with leads. For buyers, it focuses on property features, neighborhoods, and viewing appointments. For sellers, it emphasizes property valuation, market analysis, and listing strategies." />
                 </div>
                 <div className="relative">
