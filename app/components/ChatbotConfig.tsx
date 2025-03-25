@@ -286,7 +286,7 @@ const router=useRouter();
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <label className="block text-lg font-medium text-gray-700">Common Business<div className='text-sm'></div></label>
+                  <label className="block text-lg font-medium text-gray-700">Common Business info<div className='text-sm'></div></label>
                   <div className="flex items-center space-x-4">
                     <Tooltip content="These questions train the AI on your business specifics. Add frequently asked questions about your services, processes, or policies. The AI will use these to provide accurate, consistent responses aligned with your business practices." />
                   </div>
